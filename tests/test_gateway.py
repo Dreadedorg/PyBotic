@@ -1,5 +1,5 @@
 from pybotic.util.gateway import Gateway
-# h
+
 f = open(".TOKEN")
 token = f.read()[:-1]
 f.close()
