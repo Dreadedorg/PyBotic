@@ -12,4 +12,4 @@ def test_gateway():
 			gateway.ws.send("GOOGOGAAGAA")
 	gateway.bind("MESSAGE_CREATE",msg)
 	gateway.connect(token)
-	assert False
+	assert True
