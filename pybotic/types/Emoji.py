@@ -1,3 +1,5 @@
+from pybotic.types.User import User
+
 class Emoji:
 	def __new__(cls, obj):
 		if obj["id"] == None:
@@ -9,7 +11,7 @@ class Emoji:
 		self.name = obj["name"]
 	
 		self.roles = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("roles")("roles")
-		self.user = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("user")("user")
+		self.user = (lambda x: {True:(lambda y: User(obj[y])),False:(lambda z:None)}[x in obj])("user")("user")
 		self.req_colons = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("require_colons")("require_ colons")
 		self.managed = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("managed")("managed")
 		self.animated = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("animated")("animated")

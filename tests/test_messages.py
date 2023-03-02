@@ -14,4 +14,7 @@ def test():
 	sleep(3)
 	r.delete()
 	msg.react("🔥")
-	#assert False
+	msg.refresh()
+	print(msg.reactions)
+	assert msg.reactions[1] == "🔥"
+

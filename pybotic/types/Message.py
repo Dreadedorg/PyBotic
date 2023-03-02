@@ -1,4 +1,6 @@
 from pybotic.util import REST as api
+from pybotic.types.Emoji import Emoji
+from pybotic.types.User import User
 from urllib.parse import quote as encode
 
 class Message:
@@ -7,7 +9,7 @@ class Message:
 		self.id = obj["id"]
 		self.type = obj["type"] # Maybe also different classes for each type of message
 		self.channel_id = obj["channel_id"] # and this too
-		self.author = obj["author"] # convert
+		self.author = User(obj["author"]) # convert
 		self.content = obj["content"]
 		self.timestamp = obj["timestamp"]
 		self.edited_timestamp = obj["edited_timestamp"]
@@ -20,8 +22,7 @@ class Message:
 		self.pinned = obj["pinned"]
 		
 		self.mentions_roles = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("mention_roles")("mention_roles") # gonna trigger all the programmers, convertttttt
-		self.reactions = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("reactions")("reactions") # animal abuse
-		self.nonce = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("nonce")("nonce")
+		self.nonce = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("nonce")("nonce") # animal abuse
 		self.webhook_id = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("webhook_id")("webhook_id")
 		self.activity = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("activity")("activity") # the reason why i do it this god awful way
 		self.application = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("application")("application") # is cuz i liek 1 line :D, convert btw
@@ -34,7 +35,14 @@ class Message:
 		self.stickers = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("stickers")("stickers") # co n v e r t
 		self.position = (lambda x: {True:(lambda y: obj[y]),False:(lambda z:None)}[x in obj])("position")("position") # convert
 		
+		self.reactions = None
+		if "reactions" in obj:
+			self.reactions = {}
+			for r in obj["reactions"]:
+				self.reactions[r["count"]] = Emoji(r["emoji"])
 		# insert converting the arrays hereeee
+	def refresh(self):
+		self.__init__(api.GET(f"/channels/{self.channel_id}/messages/{self.id}",None,self.token))
 	def delete(self):
 		api.DELETE(f"/channels/{self.channel_id}/messages/{self.id}",self.token)
 		del self
@@ -65,6 +73,6 @@ class Message:
 	def get_reactions(self):
 		reactions = {}
 		for r in self.reactions:
-			reactions[r["count"]] = r["emoji"]
+			reactions[r["count"]] = Emoji(r["emoji"])
 		return reactions
 
