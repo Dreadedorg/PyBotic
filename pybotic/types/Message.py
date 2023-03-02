@@ -62,3 +62,9 @@ class Message:
 		msg = Message(resp)
 		msg.token = self.token
 		return msg
+	def get_reactions(self):
+		reactions = {}
+		for r in self.reactions:
+			reactions[r["count"]] = r["emoji"]
+		return reactions
+
